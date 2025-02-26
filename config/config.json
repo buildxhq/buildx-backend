@@ -1,0 +1,9 @@
+{
+  "development": {
+    "username": "buildx_user",
+    "password": "Jaelyn106!",
+    "database": "buildx_db",
+    "host": "localhost",
+    "dialect": "postgres"
+  }
+}
