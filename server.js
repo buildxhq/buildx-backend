@@ -15,7 +15,7 @@ app.use('/api/auth', require('./routes/auth'));
 
 
 app.listen(PORT, '0.0.0.0', () => {
-    console.log(`Server running on port ${PORT}`);
+    console.log(`🔥 BuildX Backend is Live on Port ${PORT} 🔥`);
 });
 
 
