@@ -10,7 +10,9 @@ app.get('/', (req, res) => {
 });
 
 // Authentication Routes
+app.use(express.json());
 app.use('/api/auth', require('./routes/auth'));
+
 
 app.listen(PORT, '0.0.0.0', () => {
     console.log(`Server running on port ${PORT}`);
