@@ -18,4 +18,3 @@ knex.raw('SELECT 1')
     });
 
 module.exports = knex;
-
