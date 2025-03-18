@@ -9,4 +9,3 @@ const getAllProjects = async () => {
 };
 
 module.exports = { createProject, getAllProjects };
-
