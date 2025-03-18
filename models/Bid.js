@@ -9,4 +9,3 @@ const getBidsForProject = async (projectId) => {
 };
 
 module.exports = { createBid, getBidsForProject };
-
