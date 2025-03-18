@@ -8,4 +8,3 @@ router.post('/', authMiddleware, createBid);
 router.get('/:projectId', getBidsForProject);
 
 module.exports = router;
-
