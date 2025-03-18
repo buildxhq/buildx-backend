@@ -1,21 +1,17 @@
 const express = require('express');
+const authRoutes = require('./routes/auth');
+const projectRoutes = require('./routes/projects');
+const bidRoutes = require('./routes/bids');
+const fileRoutes = require('./routes/files');
+
+require('dotenv').config();
+
 const app = express();
-const PORT = 5000;
-
-// Middleware to parse JSON
 app.use(express.json());
 
-app.get('/', (req, res) => {
-    res.send('BuildX Backend is Running!');
-});
+app.use('/api/auth', authRoutes);
+app.use('/api/projects', projectRoutes);
+app.use('/api/bids', bidRoutes);
+app.use('/api/files', fileRoutes);
 
-// Authentication Routes
-app.use(express.json());
-app.use('/api/auth', require('./routes/auth'));
-
-
-app.listen(PORT, '0.0.0.0', () => {
-    console.log(`🔥 BuildX Backend is Live on Port ${PORT} 🔥`);
-});
-
-
+app.listen(5000, () => console.log('🔥 Server Running on Port 5000'));
