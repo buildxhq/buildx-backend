@@ -16,4 +16,3 @@ const s3 = new AWS.S3();
 console.log('✅ AWS S3 Configured');
 
 module.exports = s3;
-
