@@ -8,4 +8,3 @@ router.post('/', authMiddleware, createProject);
 router.get('/', getAllProjects);
 
 module.exports = router;
-
