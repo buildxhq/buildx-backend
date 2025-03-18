@@ -14,4 +14,4 @@ app.use('/api/projects', projectRoutes);
 app.use('/api/bids', bidRoutes);
 app.use('/api/files', fileRoutes);
 
-app.listen(5000, () => console.log('🔥 Server Running on Port 5000'));
+app.listen(PORT, '0.0.0.0', () => console.log(`🔥 Server Running on Port ${PORT}`));
