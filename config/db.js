@@ -1,10 +1,18 @@
 const knexLib = require('knex');
 require('dotenv').config();
 
+const connectionString = process.env.DATABASE_URL;
+
+// Ensure password is a valid string
+if (!connectionString || !connectionString.includes('postgresql://')) {
+    console.error('❌ Invalid DATABASE_URL. Please check your environment variables.');
+    process.exit(1);
+}
+
 const knex = knexLib({
     client: 'pg',
     connection: {
-        connectionString: process.env.DATABASE_URL,
+        connectionString: connectionString,
         ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false
     },
     pool: { min: 2, max: 10 },
