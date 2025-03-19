@@ -5,12 +5,9 @@ const knex = knexLib({
     client: 'pg',
     connection: {
         connectionString: process.env.DATABASE_URL,
-        ssl: {
-            rejectUnauthorized: false  // Allow self-signed certificates
-        }
+        ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false
     },
     pool: { min: 2, max: 10 },
-});
 
 knex.raw('SELECT 1')
     .then(() => console.log('✅ PostgreSQL Connected'))
