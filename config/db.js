@@ -8,13 +8,14 @@ const knex = knexLib({
         ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false
     },
     pool: { min: 2, max: 10 },
+});
 
-knex.raw('SELECT 1')
-    .then(() => console.log('✅ PostgreSQL Connected'))
-    .catch((err) => {
-        console.error('❌ PostgreSQL Connection Error:', err);
-        process.exit(1);
-    });
+knex.raw('SELECT 1').then(() => {
+    console.log('✅ PostgreSQL Connected');
+}).catch((err) => {
+    console.error('❌ PostgreSQL Connection Error:', err);
+    process.exit(1);
+});
 
 module.exports = knex;
 
