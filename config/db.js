@@ -5,7 +5,9 @@ const knex = knexLib({
     client: 'pg',
     connection: {
         connectionString: process.env.DATABASE_URL,
-        ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: true } : { rejectUnauthorized: false },
+        ssl: {
+            rejectUnauthorized: false  // Allow self-signed certificates
+        }
     },
     pool: { min: 2, max: 10 },
 });
@@ -18,3 +20,4 @@ knex.raw('SELECT 1')
     });
 
 module.exports = knex;
+
