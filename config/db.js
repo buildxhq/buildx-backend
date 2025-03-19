@@ -12,7 +12,6 @@ if (!connectionString || !connectionString.includes('postgresql://')) {
 const knex = knexLib({
     client: 'pg',
     connection: {
-        connection: {
         connectionString: process.env.DATABASE_URL,
         ssl: { rejectUnauthorized: false }
     },
