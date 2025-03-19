@@ -1,10 +1,11 @@
 const express = require('express');
-const { createBid, getBidsForProject } = require('../controllers/bidController');
+const { createBidHandler, getBidsForProjectHandler } = require('../controllers/bidController');
 const authMiddleware = require('../middleware/authMiddleware');
 
 const router = express.Router();
 
-router.post('/', authMiddleware, createBid);
-router.get('/:projectId', getBidsForProject);
+router.post('/', authMiddleware, createBidHandler);  // Create a bid
+router.get('/:projectId', getBidsForProjectHandler);  // Get bids for a project
 
 module.exports = router;
+
