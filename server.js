@@ -10,6 +10,8 @@ const projectRoutes = require('./routes/projects');
 const bidRoutes = require('./routes/bids');
 
 const app = express();
+app.set('trust proxy', 1); // ✅ Fixes "X-Forwarded-For" proxy error
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
