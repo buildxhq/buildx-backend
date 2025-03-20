@@ -1,11 +1,12 @@
 const knex = require('../config/db');
 
 const createUser = async (email, password) => {
-    return knex('users').insert({ email, password }).returning('*');
+    return await knex('users').insert({ email, password }).returning('*');
 };
 
 const findUserByEmail = async (email) => {
-    return knex('users').where({ email }).first();
+    return await knex('users').where({ email }).first();
 };
 
 module.exports = { createUser, findUserByEmail };
+
