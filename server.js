@@ -2,6 +2,7 @@ const http = require('http');  // Use raw HTTP to force binding
 
 require('dotenv').config();
 const express = require('express');
+const cors = require("cors");
 const morgan = require('morgan');
 const rateLimit = require('express-rate-limit');
 
@@ -13,6 +14,13 @@ const app = express();
 app.set('trust proxy', 1); // ✅ Fixes "X-Forwarded-For" proxy error
 
 app.use(express.json());
+// ✅ Enable CORS for frontend requests
+app.use(cors({
+  origin: ["http://localhost:3000", "https://www.buildxbid.com"],
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  allowedHeaders: ["Content-Type"],
+}));
+
 app.use(express.urlencoded({ extended: true }));
 
 // ✅ Apply rate limiting before defining routes
