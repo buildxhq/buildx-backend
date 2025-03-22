@@ -21,6 +21,8 @@ app.use(cors({
   allowedHeaders: ["Content-Type"],
 }));
 
+console.log("✅ CORS is enabled for:", ["http://localhost:3000", "https://www.buildxbid.com"]);
+
 app.use(express.urlencoded({ extended: true }));
 
 // ✅ Apply rate limiting before defining routes
