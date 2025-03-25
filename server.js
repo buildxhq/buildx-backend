@@ -12,6 +12,12 @@ const bidRoutes = require('./routes/bids');
 const aiRoutes = require('./routes/ai');
 const stripeRoutes = require('./routes/stripe');
 const uploadRoutes = require('./routes/uploads');
+const adminRoutes = require('./routes/admin');
+const aiLogRoutes = require('./routes/ai-log');
+const notificationRoutes = require('./routes/notifications');
+const activityRoutes = require('./routes/activity');
+const flagRoutes = require('./routes/flags');
+const messageRoutes = require('./routes/messages');
 
 const app = express();
 app.set('trust proxy', 1); // ✅ Fixes "X-Forwarded-For" proxy error
@@ -52,6 +58,12 @@ app.use('/api/bids', bidRoutes);
 app.use('/api/ai', aiRoutes);
 app.use('/api/stripe', stripeRoutes);
 app.use('/api/uploads', uploadRoutes);
+app.use('/api/admin', adminRoutes);
+app.use('/api/ai-log', aiLogRoutes);
+app.use('/api/notifications', notificationRoutes);
+app.use('/api/activity', activityRoutes);
+app.use('/api/flags', flagRoutes);
+app.use('/api/messages', messageRoutes);
 
 // Root route
 app.get('/', (req, res) => {

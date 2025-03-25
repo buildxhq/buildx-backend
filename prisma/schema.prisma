@@ -8,17 +8,24 @@ datasource db {
 }
 
 model users {
-  id              Int       @id @default(autoincrement())
-  email           String    @unique
+  id              Int              @id @default(autoincrement())
+  email           String           @unique
   password        String
-  role            String    @default("gc")
-  planTier        String    @default("starter")
-  aiTakeoffsLimit Int       @default(5)
-  aiTakeoffsUsed  Int       @default(0)
+  role            String           @default("gc")
+  planTier        String           @default("starter")
+  aiTakeoffsLimit Int              @default(5)
+  aiTakeoffsUsed  Int              @default(0)
   name            String?
   phone           String?
   logo            String?
-  created_at      DateTime? @default(now())
+  created_at      DateTime?        @default(now())
+  ai_estimations  ai_estimations[]
+  ai_proposals    ai_proposals[]
+  bid_confidence  bid_confidence[]
+  sent_messages   messages[]       @relation("MessageSender")
+  threads         threads[]        @relation("ThreadParticipants")
+  notifications   notifications[]
+  activity_log    activity_log[]
 
   // 🔁 RELATIONS
   projects    projects[]
@@ -33,19 +40,22 @@ model users {
 }
 
 model projects {
-  id            Int           @id @default(autoincrement())
-  name          String
-  deadline      DateTime      @db.Date
-  description   String
-  status        String        @default("draft")
-  valueEstimate Float?
-  trades        String[]      @default([])
-  created_at    DateTime?     @default(now())
-  owner_id      Int
-  owner         users         @relation(fields: [owner_id], references: [id])
-  bids          bids[]
-  files         files[]
-  ai_takeoffs   ai_takeoffs[]
+  id             Int              @id @default(autoincrement())
+  name           String
+  deadline       DateTime         @db.Date
+  description    String
+  status         String           @default("draft")
+  valueEstimate  Float?
+  trades         String[]         @default([])
+  created_at     DateTime?        @default(now())
+  owner_id       Int
+  owner          users            @relation(fields: [owner_id], references: [id])
+  bids           bids[]
+  files          files[]
+  ai_takeoffs    ai_takeoffs[]
+  ai_estimations ai_estimations[]
+  ai_proposals   ai_proposals[]
+  bid_confidence bid_confidence[]
 }
 
 model bids {
@@ -104,4 +114,78 @@ model subscriptions {
   status               String
   created_at           DateTime? @default(now())
   updated_at           DateTime?
+}
+
+model ai_estimations {
+  id         Int       @id @default(autoincrement())
+  user       users     @relation(fields: [user_id], references: [id])
+  user_id    Int
+  project    projects  @relation(fields: [project_id], references: [id])
+  project_id Int
+  materials  Float
+  labor      Float
+  timeline   Int
+  created_at DateTime? @default(now())
+}
+
+model ai_proposals {
+  id         Int       @id @default(autoincrement())
+  user       users     @relation(fields: [user_id], references: [id])
+  user_id    Int
+  project    projects  @relation(fields: [project_id], references: [id])
+  project_id Int
+  url        String
+  created_at DateTime? @default(now())
+}
+
+model bid_confidence {
+  id         Int       @id @default(autoincrement())
+  user       users     @relation(fields: [user_id], references: [id])
+  user_id    Int
+  project    projects  @relation(fields: [project_id], references: [id])
+  project_id Int
+  score      Float
+  created_at DateTime? @default(now())
+}
+
+model threads {
+  id           Int        @id @default(autoincrement())
+  participants users[]    @relation("ThreadParticipants")
+  messages     messages[]
+  created_at   DateTime?  @default(now())
+}
+
+model messages {
+  id        Int       @id @default(autoincrement())
+  thread    threads   @relation(fields: [thread_id], references: [id])
+  thread_id Int
+  sender    users     @relation("MessageSender", fields: [sender_id], references: [id])
+  sender_id Int
+  body      String
+  sent_at   DateTime? @default(now())
+}
+
+model notifications {
+  id         Int       @id @default(autoincrement())
+  user       users     @relation(fields: [user_id], references: [id])
+  user_id    Int
+  message    String
+  read       Boolean   @default(false)
+  created_at DateTime? @default(now())
+}
+
+model featureFlags {
+  id         Int       @id @default(autoincrement())
+  key        String    @unique
+  enabled    Boolean   @default(false)
+  created_at DateTime? @default(now())
+}
+
+model activity_log {
+  id         Int       @id @default(autoincrement())
+  user       users     @relation(fields: [user_id], references: [id])
+  user_id    Int
+  action     String
+  details    String?
+  created_at DateTime? @default(now())
 }
