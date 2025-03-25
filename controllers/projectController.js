@@ -1,26 +1,48 @@
-const { createProject, getAllProjects } = require('../models/Project');
+const prisma = require('../utils/prismaClient');
 
+// ✅ CREATE PROJECT
 const createProjectHandler = async (req, res) => {
-    try {
-        const { name, description } = req.body;
-        if (!name || !description) {
-            return res.status(400).json({ message: "Project name and description are required" });
-        }
+  const { name, deadline, description } = req.body;
 
-        const project = await createProject(name, description, req.user.id);
-        res.json(project);
-    } catch (error) {
-        res.status(500).json({ message: "Error creating project", error: error.message });
-    }
+  try {
+    const project = await prisma.projects.create({
+      data: {
+        name,
+        deadline: new Date(deadline),
+        description,
+        owner_id: req.user.id,
+      },
+    });
+
+    res.status(201).json({ message: "Project created successfully", project });
+  } catch (error) {
+    console.error("❌ Error creating project:", error);
+    res.status(500).json({ message: "Error creating project", error: error.message });
+  }
 };
 
+// ✅ GET PROJECTS
 const getProjectsHandler = async (req, res) => {
-    try {
-        const projects = await getAllProjects();
-        res.json(projects);
-    } catch (error) {
-        res.status(500).json({ message: "Error retrieving projects", error: error.message });
-    }
+  try {
+    const projects = await prisma.projects.findMany({
+      where: {
+        owner_id: req.user.id,
+      },
+      orderBy: {
+        created_at: 'desc',
+      },
+    });
+
+    res.json({ projects });
+  } catch (error) {
+    console.error("❌ Error fetching projects:", error);
+    res.status(500).json({ message: "Failed to retrieve projects", error: error.message });
+  }
 };
 
-module.exports = { createProjectHandler, getProjectsHandler };
+// ✅ Export both functions
+module.exports = {
+  createProjectHandler,
+  getProjectsHandler,
+};
+
