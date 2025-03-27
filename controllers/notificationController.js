@@ -1,38 +1,37 @@
+// controllers/notificationController.js
 const prisma = require('../utils/prismaClient');
 
-// 🔔 Get user notifications
-const getNotifications = async (req, res) => {
+// ✅ GET /api/notifications
+const getUserNotifications = async (req, res) => {
   try {
     const notifications = await prisma.notifications.findMany({
       where: { user_id: req.user.id },
-      orderBy: { created_at: 'desc' }
+      orderBy: { created_at: 'desc' },
     });
 
-    res.json({ notifications });
-  } catch (err) {
-    console.error('❌ Notification Fetch Error:', err);
-    res.status(500).json({ message: 'Failed to get notifications', error: err.message });
+    res.json(notifications);
+  } catch (error) {
+    console.error("❌ Get Notifications Error:", error);
+    res.status(500).json({ message: "Failed to fetch notifications", error: error.message });
   }
 };
 
-// ✅ Mark notification as read
+// ✅ PATCH /api/notifications/:id/read
 const markAsRead = async (req, res) => {
-  const { id } = req.params;
-
   try {
+    const notificationId = parseInt(req.params.id);
+
     const updated = await prisma.notifications.update({
-      where: { id: parseInt(id) },
-      data: { read: true }
+      where: { id: notificationId },
+      data: { read: true },
     });
 
-    res.json({ message: 'Marked as read', updated });
-  } catch (err) {
-    console.error('❌ Mark Read Error:', err);
-    res.status(500).json({ message: 'Failed to mark as read', error: err.message });
+    res.json({ message: "Notification marked as read", updated });
+  } catch (error) {
+    console.error("❌ Mark As Read Error:", error);
+    res.status(500).json({ message: "Failed to mark notification as read", error: error.message });
   }
 };
 
-module.exports = {
-  getNotifications,
-  markAsRead,
-};
+module.exports = { getUserNotifications, markAsRead };
+

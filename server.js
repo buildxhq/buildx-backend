@@ -18,6 +18,16 @@ const notificationRoutes = require('./routes/notifications');
 const activityRoutes = require('./routes/activity');
 const flagRoutes = require('./routes/flags');
 const messageRoutes = require('./routes/messages');
+const billingRoutes = require('./routes/billing');
+const analyticsRoutes = require('./routes/analytics');
+const inviteRoutes = require('./routes/invite');
+const testEmailRoutes = require('./routes/testEmail');
+const notesRoutes = require('./routes/notes');
+const rebidRoutes = require('./routes/rebids');
+const preferencesRoutes = require('./routes/preferences');
+const teamRoutes = require('./routes/team');
+const templateRoutes = require('./routes/templates');
+const userRoutes = require('./routes/users');
 
 const app = express();
 app.set('trust proxy', 1); // ✅ Fixes "X-Forwarded-For" proxy error
@@ -64,6 +74,16 @@ app.use('/api/notifications', notificationRoutes);
 app.use('/api/activity', activityRoutes);
 app.use('/api/flags', flagRoutes);
 app.use('/api/messages', messageRoutes);
+app.use('/api/billing', billingRoutes);
+app.use('/api/internal/analytics', analyticsRoutes);
+app.use('/api/invite', inviteRoutes);
+app.use('/api/test', testEmailRoutes);
+app.use('/api/notes', notesRoutes);
+app.use('/api/rebids', rebidRoutes);
+app.use('/api/preferences', preferencesRoutes);
+app.use('/api/team', teamRoutes);
+app.use('/api/templates', templateRoutes);
+app.use('/api/users', userRoutes);
 
 // Root route
 app.get('/', (req, res) => {

@@ -2,6 +2,7 @@
 const prisma = require('../utils/prismaClient');
 const Stripe = require('stripe');
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+const logActivity = require('../utils/logActivity');
 
 // POST /api/stripe/checkout-session
 const createCheckoutSession = async (req, res) => {
@@ -73,33 +74,52 @@ const handleStripeWebhook = async (req, res) => {
       const plan = session.metadata.plan || 'gc_growth';
 
       const takeoffLimits = {
-        gc_growth: 50,
+        gc_growth: 10,
         gc_unlimited: 999,
-        sub_verified_pro: 10,
-        sub_elite_partner: 999,
-        ae_professional: 25,
+        gc_starter: 0,
+        sub_verified_pro: 0,
+        sub_elite_partner: 5,
+        ae_professional: 0,
         ae_enterprise: 999,
-        ai_takeoff: 5,
+        ai_takeoff: 1,
         ai_takeoff_unlimited: 9999,
       };
 
-      await prisma.users.update({
-        where: { id: userId },
-        data: {
-          planTier: plan,
-          aiTakeoffsLimit: takeoffLimits[plan] || 5,
-        },
-      });
+      const projectPostLimits = {
+        starter: 5,
+        gc_growth: 10,
+        gc_unlimited: 999,
+        sub_verified_pro: 0,
+        sub_elite_partner: 0,
+        ae_professional: 5,
+        ae_enterprise: 999,
+};
+      await logActivity(userId, 'Upgraded Plan', `New Plan: ${plan}`);
 
-      await prisma.subscriptions.create({
-        data: {
-          user_id: userId,
-          stripeCustomerId: session.customer,
-          stripeSubscriptionId: session.subscription,
-          plan: plan,
-          status: 'active',
-        },
-      });
+      const retry = require('../utils/retry');
+
+      await retry(async () => {
+        await prisma.users.update({
+          where: { id: userId },
+          data: {
+            planTier: plan,
+            aiTakeoffsLimit: takeoffLimits[plan] || 5,
+          },
+        });
+      }, 3, 1500, { userId, reason: 'stripe.user.update' });
+
+      await retry(async () => {
+        await prisma.subscriptions.create({
+          data: {
+            user_id: userId,
+            stripeCustomerId: session.customer,
+            stripeSubscriptionId: session.subscription,
+            plan: plan,
+            status: 'active',
+          },
+        });
+      }, 3, 1500, { userId, reason: 'stripe.subscription.create' });
+
 
       console.log(`✅ Stripe plan '${plan}' activated for user ${userId}`);
     }
