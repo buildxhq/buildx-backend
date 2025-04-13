@@ -1,3 +1,6 @@
+// BuildX Final Prisma Schema (Phases 1–3 + Optional Add-ons)
+// Includes: Users, Companies, Projects, Bids, AI, Quotes, Submittals, Schedule, Punchlist, Logs, Contracts, RFIs, Change Orders
+
 generator client {
   provider = "prisma-client-js"
 }
@@ -7,280 +10,566 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model users {
-  id                Int                 @id @default(autoincrement())
-  email             String              @unique
-  password          String
-  created_at        DateTime?           @default(now())
-  aiTakeoffsLimit   Int                 @default(0)
-  aiTakeoffsUsed    Int                 @default(0)
-  company_id        Int?
-  logo              String?
-  name              String?
-  phone             String?
-  planTier          String              @default("starter")
-  role              String              @default("gc")
-  projectPostLimit  Int                 @default(5)
-  badge             String?
-  activity_log      activity_log[]
-  ai_estimations    ai_estimations[]
-  ai_proposals      ai_proposals[]
-  ai_takeoffs       ai_takeoffs[]
-  bid_confidence    bid_confidence[]
-  bids              bids[]
-  emails            emails[]
-  files             files[]
-  invites_received  invites[]           @relation("InviteRecipient")
-  invites_sent      invites[]           @relation("InvitesSent")
-  sent_messages     messages[]          @relation("MessageSender")
-  notifications     notifications[]
-  project_notes     project_notes[]
-  project_templates project_templates[]
-  projects          projects[]
-  rebid_requests    rebid_requests[]    @relation("UserRebidRequests")
-  subscription      subscriptions?      @relation("UserSubscription")
-  team_as_owner     team_members[]      @relation("TeamOwner")
-  team_as_member    team_members[]      @relation("TeamUser")
-  team_members      team_members[]
-  user_preferences  user_preferences?
-  company           companies?          @relation(fields: [company_id], references: [id])
-  threads           threads[]           @relation("ThreadParticipants")
+enum Role {
+  gc
+  sub
+  ae
+  supplier
+  admin
 }
 
-model projects {
-  id                       Int              @id @default(autoincrement())
-  name                     String
-  deadline                 DateTime         @db.Date
-  description              String
-  created_at               DateTime?        @default(now())
-  owner_id                 Int
-  status                   String           @default("draft")
-  trades                   String[]         @default([])
-  valueEstimate            Float?
-  estimated_schedule_weeks Int?
-  ai_estimations           ai_estimations[]
-  ai_proposals             ai_proposals[]
-  ai_takeoffs              ai_takeoffs[]
-  bid_confidence           bid_confidence[]
-  bids                     bids[]
-  files                    files[]
-  invites                  invites[]
-  project_notes            project_notes[]
-  owner                    users            @relation(fields: [owner_id], references: [id])
-  rebid_requests           rebid_requests[]
-  team_members             team_members[]
+enum PlanTier {
+  gc_starter
+  gc_growth
+  gc_unlimited
+  sub_free
+  sub_verified_pro
+  sub_elite_partner
+  ae_professional
+  ae_enterprise
+  supplier_free
+  supplier_pro
 }
 
-model bids {
-  id          Int       @id @default(autoincrement())
-  project_id  Int
-  user_id     Int
-  amount      Float
-  notes       String?
-  submittedAt DateTime? @default(now())
-  viewedAt    DateTime?
-  awardedAt   DateTime?
-  status      String    @default("submitted")
-  project     projects  @relation(fields: [project_id], references: [id])
-  user        users     @relation(fields: [user_id], references: [id])
+model User {
+  id                 String            @id @default(uuid())
+  email              String            @unique
+  password           String
+  role               Role
+  planTier           PlanTier
+  verified           Boolean           @default(false)
+  company            Company?          @relation(fields: [companyId], references: [id])
+  companyId          String?
+  phone              String?
+  fax                String?
+  verificationToken  String?
+  gcContacts         GcContact[]
+  tokenExpires       DateTime?
+  certifications     String[] // or Json?
+  laborAffiliations  String[] // or Json?
+  regions            String[]
+  receivedInvites    Invite[]          @relation("received_invites")
+  address            String?
+  sentInvites        Invite[]          @relation("sent_invites")
+  projects           Project[]
+  resetToken         String?
+  resetTokenExpires  DateTime?
+  aiPostAwards       AiPostAward[]
+  aiScopes           AiScope[]
+  aiSchedules        AiSchedule[]
+  aiTakeoffs         AiTakeoff[]
+  aiProposals        AiProposal[]
+  confidenceScores   ConfidenceScore[]
+  aiTakeoffsLimit    Int               @default(0)
+  aiTakeoffsUsed     Int               @default(0)
+  notifications      Notification[]
+  aiEstimations      AiEstimation[]
+  aiDiagnostics      AiDiagnostics[]
+  activityLogs       ActivityLog[]
+  trades             Trade[]           @relation("user_trades")
+  bids               Bid[]
+  subscriptionActive Boolean           @default(false)
+  aiRequests         AIRequest[]
+  createdAt          DateTime          @default(now())
+  badge              String?
+  name               String?
+  messageThreads     MessageThread[]   @relation("ThreadParticipants")
+  supplier           Supplier?
+  AuditLog           AuditLog[]
+  UserTrades         UserTrade[]       @relation("user_to_trade")
+  Subscription       Subscription?
+  Message            Message[]
+  ProjectNote        ProjectNote[]
+  TeamMember         TeamMember[]
+  UserPreference     UserPreference[]
 }
 
-model companies {
-  id      Int     @id @default(autoincrement())
-  name    String  @unique
-  website String?
-  phone   String?
-  logo    String?
-  users   users[]
+model Company {
+  id        String     @id @default(uuid())
+  name      String     @unique
+  address   String?
+  website   String?
+  users     User[]
+  projects  Project[]
+  suppliers Supplier[]
 }
 
-model ai_takeoffs {
-  id          Int       @id @default(autoincrement())
-  project_id  Int
-  user_id     Int
+model Project {
+  id                     String            @id @default(uuid())
+  name                   String
+  address                String?
+  userId                 String?
+  user                   User?             @relation(fields: [userId], references: [id])
+  dueDate                DateTime?
+  status                 String            @default("draft")
+  visibility             String            @default("private")
+  company                Company           @relation(fields: [companyId], references: [id])
+  companyId              String
+  confidenceScores       ConfidenceScore[]
+  estimatedScheduleWeeks Int?
+  bids                   Bid[]
+  proposalUrl            String? // ✅ new
+  proposalChecklist      Json? // ✅ new
+  proposalGeneratedBy    String?
+  invites                Invite[]
+  files                  ProjectFile[]
+  valueEstimate          Float?
+  scopeSummary           String?
+  aiTakeoffs             AiTakeoff[]
+  aiPostAwards           AiPostAward[]
+  aiScopes               AiScope[]
+  aiSchedules            AiSchedule[]
+  submittals             Submittal[]
+  aiEstimations          AiEstimation[]
+  aiProposals            AiProposal[]
+  schedule               ScheduleItem[]
+  trades                 Trade[]           @relation("project_trades")
+  punchlist              PunchlistItem[]
+  aiDiagnostics          AiDiagnostics[]
+  quotes                 Quote[]
+  closedAt               DateTime?
+  rfis                   RFI[]
+  changeOrders           ChangeOrder[]
+  createdAt              DateTime          @default(now())
+  RebidRequest           RebidRequest[]
+}
+
+model ProjectFile {
+  id           String   @id @default(uuid())
+  project      Project  @relation(fields: [projectId], references: [id])
+  projectId    String
+  fileName     String
+  fileType     String
+  s3Url        String
+  tag          String?
+  uploadedById String?
+  uploadedAt   DateTime @default(now())
+  createdAt    DateTime @default(now())
+}
+
+model Bid {
+  id                  String    @id @default(uuid())
+  project             Project   @relation(fields: [projectId], references: [id])
+  projectId           String
+  invite              Invite?   @relation(fields: [inviteId], references: [id])
+  inviteId            String?
+  amount              Float?
+  fileUrl             String?
+  withdrawnAt         DateTime  @default(now())
+  contractSigned      Boolean   @default(false) // ✅ Add this
+  contractSignedAt    DateTime?
+  attachmentUrl       String?
+  updatedAt           DateTime  @updatedAt
+  notes               String?
+  contractUrl         String?
+  awardedAt           DateTime  @default(now())
+  exclusions          String?
+  rebidRequestedAt    DateTime  @default(now())
+  invoiceUrl          String? // <-- this must exist
+  invoiceUploadedAt   DateTime?
+  status              String    @default("submitted")
+  proposalUrl         String?
+  proposalUploadedAt  DateTime?
+  proposalGeneratedBy String?
+  confidenceScore     Float?
+  flaggedRisks        String?
+  rebidMessage        String?
+  subcontractor       User      @relation(fields: [subcontractorId], references: [id])
+  subcontractorId     String
+  submittedAt         DateTime?
+  createdAt           DateTime  @default(now())
+  scope               String?
+}
+
+model Invite {
+  id        String  @id @default(uuid())
+  projectId String
+  project   Project @relation(fields: [projectId], references: [id])
+
+  senderId    String?
+  recipientId String?
+  sender      User?   @relation("sent_invites", fields: [senderId], references: [id])
+  recipient   User?   @relation("received_invites", fields: [recipientId], references: [id])
+
+  email       String
+  token       String    @unique
+  message     String?
+  type        String
+  trade       String
+  status      String    @default("sent")
+  sentAt      DateTime
+  acceptedAt  DateTime?
+  respondedAt DateTime?
+  bids        Bid[]
+}
+
+model Submittal {
+  id              String    @id @default(uuid())
+  project         Project   @relation(fields: [projectId], references: [id])
+  projectId       String
+  userId          String?
+  trade           String
+  reviewedById    String? // ✅ Add this
+  reviewedAt      DateTime?
+  rejectionReason String?
+  notes           String?
+  title           String
+  fileUrl         String
+  status          String    @default("pending")
+  dueDate         DateTime
+  createdAt       DateTime  @default(now())
+}
+
+model ScheduleItem {
+  id          String   @id @default(uuid())
+  project     Project  @relation(fields: [projectId], references: [id])
+  projectId   String
+  trade       String
+  description String
+  startDate   DateTime
+  endDate     DateTime
+  status      String   @default("scheduled")
+}
+
+model PunchlistItem {
+  id          String   @id @default(uuid())
+  project     Project  @relation(fields: [projectId], references: [id])
+  projectId   String
+  trade       String
+  location    String
+  description String
+  photoUrl    String?
+  resolved    Boolean  @default(false)
+  createdAt   DateTime @default(now())
+}
+
+model Supplier {
+  id         String  @id @default(uuid())
+  company    Company @relation(fields: [companyId], references: [id])
+  companyId  String
+  user       User    @relation(fields: [userId], references: [id])
+  userId     String  @unique
+  name       String // ✅ Add this if it's missing
+  email      String?
+  catalogUrl String?
+  quotes     Quote[]
+  verified   Boolean @default(false)
+}
+
+model Quote {
+  id           String   @id @default(uuid())
+  amount       Float
+  supplier     Supplier @relation(fields: [supplierId], references: [id])
+  supplierId   String
+  notes        String?
+  project      Project  @relation(fields: [projectId], references: [id])
+  projectId    String
+  trade        String
+  material     String
+  price        Float
+  acceptedAt   DateTime @default(now())
+  deliveryTime Int?
+  fileUrl      String?
+  rejectedAt   DateTime @default(now())
+  status       String   @default("pending")
+  submittedAt  DateTime @default(now())
+}
+
+model Notification {
+  id        String   @id @default(uuid())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+  type      String
+  message   String
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
+
+model AIRequest {
+  id          String    @id @default(uuid())
+  user        User      @relation(fields: [userId], references: [id])
+  userId      String
+  projectId   String?
+  bidId       String?
+  type        String
+  input       Json
+  output      Json?
   status      String    @default("pending")
-  resultUrl   String?
-  created_at  DateTime? @default(now())
+  error       String?
+  requestedAt DateTime  @default(now())
   completedAt DateTime?
-  project     projects  @relation(fields: [project_id], references: [id])
-  user        users     @relation(fields: [user_id], references: [id])
 }
 
-model files {
-  id         Int       @id @default(autoincrement())
-  url        String
-  fileType   String
-  project_id Int
-  user_id    Int
-  uploadedAt DateTime? @default(now())
-  project    projects  @relation(fields: [project_id], references: [id])
-  user       users     @relation(fields: [user_id], references: [id])
+model ActivityLog {
+  id        String    @id @default(uuid())
+  user      User?     @relation(fields: [userId], references: [id])
+  userId    String? // ✅ MUST match the relation above
+  action    String
+  entity    String
+  entityId  String
+  metadata  Json?
+  details   String?
+  createdAt DateTime  @default(now())
+  timestamp DateTime?
 }
 
-model subscriptions {
-  id                   Int       @id @default(autoincrement())
-  user_id              Int       @unique
-  stripeCustomerId     String
-  stripeSubscriptionId String
-  plan                 String
-  status               String
-  created_at           DateTime? @default(now())
-  updated_at           DateTime?
-  user                 users     @relation("UserSubscription", fields: [user_id], references: [id])
+model ChangeOrder {
+  id          String   @id @default(uuid())
+  project     Project  @relation(fields: [projectId], references: [id])
+  projectId   String
+  title       String
+  description String
+  amount      Float
+  approved    Boolean  @default(false)
+  submittedAt DateTime @default(now())
 }
 
-model ai_estimations {
-  id         Int       @id @default(autoincrement())
-  user_id    Int
-  project_id Int
-  materials  Float
-  labor      Float
-  timeline   Int
-  created_at DateTime? @default(now())
-  project    projects  @relation(fields: [project_id], references: [id])
-  user       users     @relation(fields: [user_id], references: [id])
+model RFI {
+  id          String    @id @default(uuid())
+  project     Project   @relation(fields: [projectId], references: [id])
+  projectId   String
+  question    String
+  response    String?
+  trade       String
+  status      String    @default("open")
+  submittedAt DateTime  @default(now())
+  respondedAt DateTime?
 }
 
-model ai_proposals {
-  id         Int       @id @default(autoincrement())
-  user_id    Int
-  project_id Int
-  url        String
-  created_at DateTime? @default(now())
-  project    projects  @relation(fields: [project_id], references: [id])
-  user       users     @relation(fields: [user_id], references: [id])
+model Trade {
+  id        String      @id @default(uuid())
+  division  String
+  code      String?
+  name      String      @unique
+  projects  Project[]   @relation("project_trades")
+  users     User[]      @relation("user_trades")
+  custom    Boolean     @default(false)
+  createdAt DateTime    @default(now())
+  UserTrade UserTrade[]
 }
 
-model bid_confidence {
-  id         Int       @id @default(autoincrement())
-  user_id    Int
-  project_id Int
-  score      Float
-  created_at DateTime? @default(now())
-  project    projects  @relation(fields: [project_id], references: [id])
-  user       users     @relation(fields: [user_id], references: [id])
+model UserTrade {
+  id      String @id @default(uuid())
+  user    User   @relation("user_to_trade", fields: [userId], references: [id])
+  userId  String
+  trade   Trade  @relation(fields: [tradeId], references: [id])
+  tradeId String
 }
 
-model threads {
-  id           Int        @id @default(autoincrement())
-  created_at   DateTime?  @default(now())
-  messages     messages[]
-  participants users[]    @relation("ThreadParticipants")
+model AiTakeoff {
+  id        String   @id @default(uuid())
+  userId    String
+  projectId String
+  fileId    String
+  status    String
+  jobId     String
+  resultUrl String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user    User    @relation(fields: [userId], references: [id]) // ✅ relation
+  project Project @relation(fields: [projectId], references: [id])
 }
 
-model messages {
-  id        Int       @id @default(autoincrement())
-  thread_id Int
-  sender_id Int
-  body      String
-  sent_at   DateTime? @default(now())
-  sender    users     @relation("MessageSender", fields: [sender_id], references: [id])
-  thread    threads   @relation(fields: [thread_id], references: [id])
+model AiDiagnostics {
+  id            String   @id @default(uuid())
+  projectId     String
+  userId        String
+  issues        Json?
+  summary       String?
+  createdAt     DateTime @default(now())
+  flaggedTrades Json?
+  riskLevel     String?
+  project       Project  @relation(fields: [projectId], references: [id])
+  user          User     @relation(fields: [userId], references: [id])
 }
 
-model notifications {
-  id         Int       @id @default(autoincrement())
-  user_id    Int
-  message    String
-  read       Boolean   @default(false)
-  created_at DateTime? @default(now())
-  link       String?
-  user       users     @relation(fields: [user_id], references: [id])
+model AiEstimation {
+  id             String   @id @default(uuid())
+  projectId      String
+  userId         String
+  materials      Json? // ✅ Add
+  labor          Json? // ✅ Add
+  timeline       Json?
+  costEstimate   Float
+  tradeBreakdown Json
+  createdAt      DateTime @default(now())
+
+  project Project @relation(fields: [projectId], references: [id])
+  user    User    @relation(fields: [userId], references: [id])
 }
 
-model featureFlags {
-  id         Int       @id @default(autoincrement())
-  key        String    @unique
-  enabled    Boolean   @default(false)
-  created_at DateTime? @default(now())
+model ConfidenceScore {
+  id        String   @id @default(uuid())
+  userId    String
+  projectId String
+  score     Float
+  createdAt DateTime @default(now())
+
+  user    User    @relation(fields: [userId], references: [id])
+  project Project @relation(fields: [projectId], references: [id])
 }
 
-model activity_log {
-  id         Int       @id @default(autoincrement())
-  user_id    Int
-  action     String
-  details    String?
-  created_at DateTime? @default(now())
-  user       users     @relation(fields: [user_id], references: [id])
+model AiProposal {
+  id        String   @id @default(uuid())
+  userId    String
+  projectId String
+  url       String
+  createdAt DateTime @default(now())
+
+  user    User    @relation(fields: [userId], references: [id])
+  project Project @relation(fields: [projectId], references: [id])
 }
 
-model invites {
-  id           Int       @id @default(autoincrement())
-  email        String
-  created_at   DateTime  @default(now())
-  inviteUserId Int?
-  invited_by   Int
-  project_id   Int
-  status       String    @default("pending")
-  token        String?   @unique
-  name         String?
-  phone        String?
-  accepted_at  DateTime? @db.Date
-  recipient    users?    @relation("InviteRecipient", fields: [inviteUserId], references: [id])
-  inviter      users     @relation("InvitesSent", fields: [invited_by], references: [id])
-  project      projects  @relation(fields: [project_id], references: [id])
+model AiSchedule {
+  id               String   @id @default(uuid())
+  userId           String
+  projectId        String
+  scheduleJson     Json
+  milestoneSummary Json?
+  createdAt        DateTime @default(now())
+  user             User     @relation(fields: [userId], references: [id])
+  project          Project  @relation(fields: [projectId], references: [id])
 }
 
-model emails {
-  id      Int      @id @default(autoincrement())
-  user_id Int?
-  subject String
-  body    String
-  sent_at DateTime @default(now())
-  user    users?   @relation(fields: [user_id], references: [id])
+model AiScope {
+  id            String   @id @default(uuid())
+  userId        String
+  projectId     String
+  scopeSummary  String?
+  tradesMatched Json?
+  createdAt     DateTime @default(now())
+
+  user    User    @relation(fields: [userId], references: [id])
+  project Project @relation(fields: [projectId], references: [id])
 }
 
-model project_notes {
-  id         Int       @id @default(autoincrement())
-  project_id Int
-  user_id    Int
-  content    String
-  created_at DateTime? @default(now())
-  project    projects  @relation(fields: [project_id], references: [id])
-  user       users     @relation(fields: [user_id], references: [id])
+model AiPostAward {
+  id            String   @id @default(uuid())
+  projectId     String
+  userId        String
+  summaryReport String
+  nextSteps     Json?
+  createdAt     DateTime @default(now())
+
+  user    User    @relation(fields: [userId], references: [id])
+  project Project @relation(fields: [projectId], references: [id])
 }
 
-model rebid_requests {
-  id           Int      @id @default(autoincrement())
-  project_id   Int
-  requested_by Int
-  message      String?
-  created_at   DateTime @default(now())
-  status       String   @default("open")
-  project      projects @relation(fields: [project_id], references: [id])
-  requester    users    @relation("UserRebidRequests", fields: [requested_by], references: [id])
+model AuditLog {
+  id        String   @id @default(uuid())
+  userId    String
+  action    String
+  details   String?
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
 }
 
-model user_preferences {
-  id                 Int      @id @default(autoincrement())
-  user_id            Int      @unique
-  emailNotifications Boolean  @default(true)
-  darkMode           Boolean  @default(false)
-  created_at         DateTime @default(now())
-  user               users    @relation(fields: [user_id], references: [id])
+model Subscription {
+  id     String @id @default(uuid())
+  user   User   @relation(fields: [userId], references: [id])
+  userId String @unique
+
+  stripeCustomerId     String?
+  stripeSubscriptionId String?
+  planTier             String?
+  status               String? // e.g., "active", "canceled", "past_due"
+  currentPeriodEnd     DateTime?
+
+  canceledAt DateTime?
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
 }
 
-model team_members {
-  id         Int       @id @default(autoincrement())
-  user_id    Int
-  owner_id   Int
-  projectsId Int?
-  usersId    Int?
-  invited_at DateTime  @default(now())
-  role       String    @default("member")
-  owner      users     @relation("TeamOwner", fields: [owner_id], references: [id])
-  projects   projects? @relation(fields: [projectsId], references: [id])
-  user       users     @relation("TeamUser", fields: [user_id], references: [id])
-  users      users?    @relation(fields: [usersId], references: [id])
+model GcContact {
+  id        String   @id @default(uuid())
+  userId    String
+  company   String?
+  user      User     @relation(fields: [userId], references: [id])
+  name      String
+  email     String?
+  phone     String?
+  createdAt DateTime @default(now())
 }
 
-model project_templates {
-  id            Int       @id @default(autoincrement())
-  owner_id      Int
+model FeatureFlag {
+  id        String   @id @default(uuid())
+  key       String   @unique
+  enabled   Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model MessageThread {
+  id           String    @id @default(uuid())
+  participants User[]    @relation("ThreadParticipants")
+  messages     Message[]
+  createdAt    DateTime  @default(now())
+}
+
+model Message {
+  id        String        @id @default(uuid())
+  content   String
+  senderId  String
+  sender    User          @relation(fields: [senderId], references: [id])
+  threadId  String
+  thread    MessageThread @relation(fields: [threadId], references: [id])
+  createdAt DateTime      @default(now())
+  sentAt    DateTime      @default(now())
+}
+
+model ProjectNote {
+  id        String   @id @default(uuid())
+  projectId String
+  userId    String
+  content   String
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id])
+}
+
+model FileNotification {
+  id        String   @id @default(uuid())
+  userId    String
+  fileId    String
+  createdAt DateTime @default(now())
+}
+
+model RebidRequest {
+  id        String   @id @default(uuid())
+  projectId String
+  project   Project  @relation(fields: [projectId], references: [id])
+  userId    String
+  senderId  String
+  message   String
+  createdAt DateTime @default(now())
+}
+
+model TeamMember {
+  ownerId String
+  userId  String
+  role    String
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@id([ownerId, userId])
+}
+
+model ProjectTemplate {
+  id            String   @id @default(uuid())
+  ownerId       String
   name          String
   description   String?
-  trades        String[]  @default([])
+  trades        String[]
   valueEstimate Float?
-  created_at    DateTime? @default(now())
-  owner         users     @relation(fields: [owner_id], references: [id])
+  createdAt     DateTime @default(now())
+}
+
+model UserPreference {
+  userId             String   @id
+  user               User     @relation(fields: [userId], references: [id])
+  emailNotifications Boolean  @default(true)
+  darkMode           Boolean  @default(false)
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
 }

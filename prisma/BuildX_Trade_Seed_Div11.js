@@ -1,0 +1,47 @@
+// BuildX Trade Seed: FULL Division 11 - Equipment (CSI Standard)
+// Covers commercial equipment: appliances, detention/security, athletic, healthcare, lab, food service, loading dock, and more
+
+const division11 = [
+  { division: '11 - Equipment', code: '110000', name: 'Equipment' },
+  { division: '11 - Equipment', code: '110100', name: 'Operation and Maintenance of Equipment' },
+  { division: '11 - Equipment', code: '110200', name: 'Maintenance of Equipment' },
+  { division: '11 - Equipment', code: '110500', name: 'Common Work Results for Equipment' },
+  { division: '11 - Equipment', code: '111000', name: 'Commercial Equipment' },
+  { division: '11 - Equipment', code: '111100', name: 'Commercial Laundry Equipment' },
+  { division: '11 - Equipment', code: '111200', name: 'Parking Control Equipment' },
+  { division: '11 - Equipment', code: '111300', name: 'Loading Dock Equipment' },
+  { division: '11 - Equipment', code: '111400', name: 'Industrial Lifts' },
+  { division: '11 - Equipment', code: '111500', name: 'Waste Handling Equipment' },
+  { division: '11 - Equipment', code: '111600', name: 'Detention Equipment' },
+  { division: '11 - Equipment', code: '111700', name: 'Security Caging' },
+  { division: '11 - Equipment', code: '112000', name: 'Water Supply and Treatment Equipment' },
+  { division: '11 - Equipment', code: '112100', name: 'Compressed Air Equipment' },
+  { division: '11 - Equipment', code: '113000', name: 'Fluid Waste Treatment and Disposal Equipment' },
+  { division: '11 - Equipment', code: '113100', name: 'Cathodic Protection' },
+  { division: '11 - Equipment', code: '113200', name: 'Escalators and Moving Walks' },
+  { division: '11 - Equipment', code: '113300', name: 'Packaged Equipment' },
+  { division: '11 - Equipment', code: '113400', name: 'Athletic, Recreational, and Therapeutic Equipment' },
+  { division: '11 - Equipment', code: '113410', name: 'Gymnasium Equipment' },
+  { division: '11 - Equipment', code: '113420', name: 'Swimming Pool Equipment' },
+  { division: '11 - Equipment', code: '113430', name: 'Playground Equipment' },
+  { division: '11 - Equipment', code: '113500', name: 'Library Equipment' },
+  { division: '11 - Equipment', code: '113600', name: 'Theater and Stage Equipment' },
+  { division: '11 - Equipment', code: '113700', name: 'Religious Facility Equipment' },
+  { division: '11 - Equipment', code: '114000', name: 'Food Service Equipment' },
+  { division: '11 - Equipment', code: '114100', name: 'Kitchen Equipment' },
+  { division: '11 - Equipment', code: '114200', name: 'Bar Equipment' },
+  { division: '11 - Equipment', code: '114300', name: 'Vending Equipment' },
+  { division: '11 - Equipment', code: '114400', name: 'Ice Machines' },
+  { division: '11 - Equipment', code: '114500', name: 'Dishwashing Equipment' },
+  { division: '11 - Equipment', code: '115000', name: 'Medical Equipment' },
+  { division: '11 - Equipment', code: '115100', name: 'Surgical and Exam Room Equipment' },
+  { division: '11 - Equipment', code: '115200', name: 'Radiological Equipment' },
+  { division: '11 - Equipment', code: '115300', name: 'Medical Support Equipment' },
+  { division: '11 - Equipment', code: '116000', name: 'Laboratory Equipment' },
+  { division: '11 - Equipment', code: '116100', name: 'Fume Hoods' },
+  { division: '11 - Equipment', code: '116200', name: 'Laminar Flow Hoods' },
+  { division: '11 - Equipment', code: '117000', name: 'Dental Equipment' },
+  { division: '11 - Equipment', code: '118000', name: 'Office Equipment' }
+];
+
+module.exports = { division11 };

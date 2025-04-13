@@ -1,0 +1,32 @@
+const division06 = [
+  { division: '06 - Wood, Plastics, and Composites', code: '060000', name: 'Wood, Plastics, and Composites' },
+  { division: '06 - Wood, Plastics, and Composites', code: '060100', name: 'Maintenance of Wood, Plastics, and Composites' },
+  { division: '06 - Wood, Plastics, and Composites', code: '060500', name: 'Common Work Results for Wood, Plastics, and Composites' },
+  { division: '06 - Wood, Plastics, and Composites', code: '060510', name: 'Fasteners and Anchors' },
+  { division: '06 - Wood, Plastics, and Composites', code: '060520', name: 'Concealed Fasteners' },
+  { division: '06 - Wood, Plastics, and Composites', code: '060600', name: 'Schedules for Wood, Plastics, and Composites' },
+  { division: '06 - Wood, Plastics, and Composites', code: '061000', name: 'Rough Carpentry' },
+  { division: '06 - Wood, Plastics, and Composites', code: '061100', name: 'Wood Framing' },
+  { division: '06 - Wood, Plastics, and Composites', code: '061200', name: 'Structural Panels' },
+  { division: '06 - Wood, Plastics, and Composites', code: '061300', name: 'Heavy Timber Construction' },
+  { division: '06 - Wood, Plastics, and Composites', code: '061400', name: 'Engineered Wood Products' },
+  { division: '06 - Wood, Plastics, and Composites', code: '061500', name: 'Wood Decking' },
+  { division: '06 - Wood, Plastics, and Composites', code: '061600', name: 'Sheathing and Subflooring' },
+  { division: '06 - Wood, Plastics, and Composites', code: '062000', name: 'Finish Carpentry' },
+  { division: '06 - Wood, Plastics, and Composites', code: '062013', name: 'Interior Trim' },
+  { division: '06 - Wood, Plastics, and Composites', code: '062023', name: 'Finish Panels' },
+  { division: '06 - Wood, Plastics, and Composites', code: '062100', name: 'Architectural Wood Casework' },
+  { division: '06 - Wood, Plastics, and Composites', code: '062200', name: 'Custom Cabinetry' },
+  { division: '06 - Wood, Plastics, and Composites', code: '062300', name: 'Plastic Paneling and Fabrications' },
+  { division: '06 - Wood, Plastics, and Composites', code: '062400', name: 'Composite Wood Trim' },
+  { division: '06 - Wood, Plastics, and Composites', code: '063000', name: 'Wood Treatment' },
+  { division: '06 - Wood, Plastics, and Composites', code: '064000', name: 'Architectural Woodwork' },
+  { division: '06 - Wood, Plastics, and Composites', code: '064100', name: 'Interior Architectural Woodwork' },
+  { division: '06 - Wood, Plastics, and Composites', code: '064200', name: 'Exterior Architectural Woodwork' },
+  { division: '06 - Wood, Plastics, and Composites', code: '065000', name: 'Structural Plastics' },
+  { division: '06 - Wood, Plastics, and Composites', code: '066000', name: 'Plastic Fabrications' },
+  { division: '06 - Wood, Plastics, and Composites', code: '067000', name: 'Composite Fabrications' },
+  { division: '06 - Wood, Plastics, and Composites', code: '068000', name: 'Plastic Railings and Trim' }
+];
+
+module.exports = { division06 };

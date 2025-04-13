@@ -1,3 +1,0 @@
--- AlterTable
-ALTER TABLE "team_members" ADD COLUMN     "invited_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-ADD COLUMN     "role" TEXT NOT NULL DEFAULT 'member';

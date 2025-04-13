@@ -1,0 +1,286 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model users {
+  id                Int                 @id @default(autoincrement())
+  email             String              @unique
+  password          String
+  created_at        DateTime?           @default(now())
+  aiTakeoffsLimit   Int                 @default(0)
+  aiTakeoffsUsed    Int                 @default(0)
+  company_id        Int?
+  logo              String?
+  name              String?
+  phone             String?
+  planTier          String?             @default("starter")
+  role              String              @default("gc")
+  projectPostLimit  Int                 @default(5)
+  badge             String?
+  activity_log      activity_log[]
+  ai_estimations    ai_estimations[]
+  ai_proposals      ai_proposals[]
+  ai_takeoffs       ai_takeoffs[]
+  bid_confidence    bid_confidence[]
+  bids              bids[]
+  emails            emails[]
+  files             files[]
+  invites_received  invites[]           @relation("InviteRecipient")
+  invites_sent      invites[]           @relation("InvitesSent")
+  sent_messages     messages[]          @relation("MessageSender")
+  notifications     notifications[]
+  project_notes     project_notes[]
+  project_templates project_templates[]
+  projects          projects[]
+  rebid_requests    rebid_requests[]    @relation("UserRebidRequests")
+  subscription      subscriptions?      @relation("UserSubscription")
+  team_as_owner     team_members[]      @relation("TeamOwner")
+  team_as_member    team_members[]      @relation("TeamUser")
+  team_members      team_members[]
+  user_preferences  user_preferences?
+  company           companies?          @relation(fields: [company_id], references: [id])
+  threads           threads[]           @relation("ThreadParticipants")
+}
+
+model projects {
+  id                       Int              @id @default(autoincrement())
+  name                     String
+  deadline                 DateTime         @db.Date
+  description              String
+  created_at               DateTime?        @default(now())
+  owner_id                 Int
+  status                   String           @default("draft")
+  trades                   String[]         @default([])
+  valueEstimate            Float?
+  estimated_schedule_weeks Int?
+  ai_estimations           ai_estimations[]
+  ai_proposals             ai_proposals[]
+  ai_takeoffs              ai_takeoffs[]
+  bid_confidence           bid_confidence[]
+  bids                     bids[]
+  files                    files[]
+  invites                  invites[]
+  project_notes            project_notes[]
+  owner                    users            @relation(fields: [owner_id], references: [id])
+  rebid_requests           rebid_requests[]
+  team_members             team_members[]
+}
+
+model bids {
+  id          Int       @id @default(autoincrement())
+  project_id  Int
+  user_id     Int
+  amount      Float
+  notes       String?
+  submittedAt DateTime? @default(now())
+  viewedAt    DateTime?
+  awardedAt   DateTime?
+  status      String    @default("submitted")
+  project     projects  @relation(fields: [project_id], references: [id])
+  user        users     @relation(fields: [user_id], references: [id])
+}
+
+model companies {
+  id      Int     @id @default(autoincrement())
+  name    String  @unique
+  website String?
+  phone   String?
+  logo    String?
+  users   users[]
+}
+
+model ai_takeoffs {
+  id          Int       @id @default(autoincrement())
+  project_id  Int
+  user_id     Int
+  status      String    @default("pending")
+  resultUrl   String?
+  created_at  DateTime? @default(now())
+  completedAt DateTime?
+  project     projects  @relation(fields: [project_id], references: [id])
+  user        users     @relation(fields: [user_id], references: [id])
+}
+
+model files {
+  id         Int       @id @default(autoincrement())
+  url        String
+  fileType   String
+  project_id Int
+  user_id    Int
+  uploadedAt DateTime? @default(now())
+  project    projects  @relation(fields: [project_id], references: [id])
+  user       users     @relation(fields: [user_id], references: [id])
+}
+
+model subscriptions {
+  id                   Int       @id @default(autoincrement())
+  user_id              Int       @unique
+  stripeCustomerId     String
+  stripeSubscriptionId String
+  plan                 String
+  status               String
+  created_at           DateTime? @default(now())
+  updated_at           DateTime?
+  user                 users     @relation("UserSubscription", fields: [user_id], references: [id])
+}
+
+model ai_estimations {
+  id         Int       @id @default(autoincrement())
+  user_id    Int
+  project_id Int
+  materials  Float
+  labor      Float
+  timeline   Int
+  created_at DateTime? @default(now())
+  project    projects  @relation(fields: [project_id], references: [id])
+  user       users     @relation(fields: [user_id], references: [id])
+}
+
+model ai_proposals {
+  id         Int       @id @default(autoincrement())
+  user_id    Int
+  project_id Int
+  url        String
+  created_at DateTime? @default(now())
+  project    projects  @relation(fields: [project_id], references: [id])
+  user       users     @relation(fields: [user_id], references: [id])
+}
+
+model bid_confidence {
+  id         Int       @id @default(autoincrement())
+  user_id    Int
+  project_id Int
+  score      Float
+  created_at DateTime? @default(now())
+  project    projects  @relation(fields: [project_id], references: [id])
+  user       users     @relation(fields: [user_id], references: [id])
+}
+
+model threads {
+  id           Int        @id @default(autoincrement())
+  created_at   DateTime?  @default(now())
+  messages     messages[]
+  participants users[]    @relation("ThreadParticipants")
+}
+
+model messages {
+  id        Int       @id @default(autoincrement())
+  thread_id Int
+  sender_id Int
+  body      String
+  sent_at   DateTime? @default(now())
+  sender    users     @relation("MessageSender", fields: [sender_id], references: [id])
+  thread    threads   @relation(fields: [thread_id], references: [id])
+}
+
+model notifications {
+  id         Int       @id @default(autoincrement())
+  user_id    Int
+  message    String
+  read       Boolean   @default(false)
+  created_at DateTime? @default(now())
+  link       String?
+  user       users     @relation(fields: [user_id], references: [id])
+}
+
+model featureFlags {
+  id         Int       @id @default(autoincrement())
+  key        String    @unique
+  enabled    Boolean   @default(false)
+  created_at DateTime? @default(now())
+}
+
+model activity_log {
+  id         Int       @id @default(autoincrement())
+  user_id    Int
+  action     String
+  details    String?
+  created_at DateTime? @default(now())
+  user       users     @relation(fields: [user_id], references: [id])
+}
+
+model invites {
+  id           Int       @id @default(autoincrement())
+  email        String
+  created_at   DateTime  @default(now())
+  inviteUserId Int?
+  invited_by   Int
+  project_id   Int
+  status       String    @default("pending")
+  token        String?   @unique
+  name         String?
+  phone        String?
+  accepted_at  DateTime? @db.Date
+  recipient    users?    @relation("InviteRecipient", fields: [inviteUserId], references: [id])
+  inviter      users     @relation("InvitesSent", fields: [invited_by], references: [id])
+  project      projects  @relation(fields: [project_id], references: [id])
+}
+
+model emails {
+  id      Int      @id @default(autoincrement())
+  user_id Int?
+  subject String
+  body    String
+  sent_at DateTime @default(now())
+  user    users?   @relation(fields: [user_id], references: [id])
+}
+
+model project_notes {
+  id         Int       @id @default(autoincrement())
+  project_id Int
+  user_id    Int
+  content    String
+  created_at DateTime? @default(now())
+  project    projects  @relation(fields: [project_id], references: [id])
+  user       users     @relation(fields: [user_id], references: [id])
+}
+
+model rebid_requests {
+  id           Int      @id @default(autoincrement())
+  project_id   Int
+  requested_by Int
+  message      String?
+  created_at   DateTime @default(now())
+  status       String   @default("open")
+  project      projects @relation(fields: [project_id], references: [id])
+  requester    users    @relation("UserRebidRequests", fields: [requested_by], references: [id])
+}
+
+model user_preferences {
+  id                 Int      @id @default(autoincrement())
+  user_id            Int      @unique
+  emailNotifications Boolean  @default(true)
+  darkMode           Boolean  @default(false)
+  created_at         DateTime @default(now())
+  user               users    @relation(fields: [user_id], references: [id])
+}
+
+model team_members {
+  id         Int       @id @default(autoincrement())
+  user_id    Int
+  owner_id   Int
+  projectsId Int?
+  usersId    Int?
+  invited_at DateTime  @default(now())
+  role       String    @default("member")
+  owner      users     @relation("TeamOwner", fields: [owner_id], references: [id])
+  projects   projects? @relation(fields: [projectsId], references: [id])
+  user       users     @relation("TeamUser", fields: [user_id], references: [id])
+  users      users?    @relation(fields: [usersId], references: [id])
+}
+
+model project_templates {
+  id            Int       @id @default(autoincrement())
+  owner_id      Int
+  name          String
+  description   String?
+  trades        String[]  @default([])
+  valueEstimate Float?
+  created_at    DateTime? @default(now())
+  owner         users     @relation(fields: [owner_id], references: [id])
+}

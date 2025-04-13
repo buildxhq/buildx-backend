@@ -1,0 +1,48 @@
+// BuildX Trade Seed: FULL Division 10 - Specialties (CSI Standard)
+// Includes restroom accessories, partitions, fire protection, visual display boards, lockers, and more
+
+const division10 = [
+  { division: '10 - Specialties', code: '100000', name: 'Specialties' },
+  { division: '10 - Specialties', code: '100100', name: 'Maintenance of Specialties' },
+  { division: '10 - Specialties', code: '101000', name: 'Visual Display Units' },
+  { division: '10 - Specialties', code: '101100', name: 'Markerboards and Tackboards' },
+  { division: '10 - Specialties', code: '101200', name: 'Display Cases' },
+  { division: '10 - Specialties', code: '101300', name: 'Directories' },
+  { division: '10 - Specialties', code: '101400', name: 'Signage' },
+  { division: '10 - Specialties', code: '101500', name: 'Toilet Compartments' },
+  { division: '10 - Specialties', code: '101600', name: 'Toilet, Bath, and Laundry Accessories' },
+  { division: '10 - Specialties', code: '101613', name: 'Metal Toilet Accessories' },
+  { division: '10 - Specialties', code: '101620', name: 'Plastic Toilet Accessories' },
+  { division: '10 - Specialties', code: '101700', name: 'Fire Protection Specialties' },
+  { division: '10 - Specialties', code: '101710', name: 'Fire Extinguishers and Cabinets' },
+  { division: '10 - Specialties', code: '101720', name: 'Emergency Key Boxes and Fire Department Valve Cabinets' },
+  { division: '10 - Specialties', code: '101730', name: 'Fire Department Valve Cabinets' },
+  { division: '10 - Specialties', code: '102000', name: 'Louvers and Vents' },
+  { division: '10 - Specialties', code: '102100', name: 'Wall and Corner Guards' },
+  { division: '10 - Specialties', code: '102200', name: 'Partitions' },
+  { division: '10 - Specialties', code: '102300', name: 'Operable Partitions' },
+  { division: '10 - Specialties', code: '102400', name: 'Accordion Folding Partitions' },
+  { division: '10 - Specialties', code: '102500', name: 'Service Walls' },
+  { division: '10 - Specialties', code: '102600', name: 'Wall and Door Protection' },
+  { division: '10 - Specialties', code: '102700', name: 'Access Flooring' },
+  { division: '10 - Specialties', code: '102800', name: 'Toilet, Bath, and Laundry Specialties' },
+  { division: '10 - Specialties', code: '102900', name: 'Pedestrian Control Devices' },
+  { division: '10 - Specialties', code: '103000', name: 'Fireplaces and Stoves' },
+  { division: '10 - Specialties', code: '103100', name: 'Manufactured Fireplaces' },
+  { division: '10 - Specialties', code: '103200', name: 'Gas Fireplaces' },
+  { division: '10 - Specialties', code: '103300', name: 'Stoves and Inserts' },
+  { division: '10 - Specialties', code: '104000', name: 'Safety Specialties' },
+  { division: '10 - Specialties', code: '104100', name: 'Emergency Aid Specialties' },
+  { division: '10 - Specialties', code: '104200', name: 'Defibrillator Cabinets' },
+  { division: '10 - Specialties', code: '104300', name: 'Security Cabinets and Lockers' },
+  { division: '10 - Specialties', code: '105000', name: 'Lockers' },
+  { division: '10 - Specialties', code: '105100', name: 'Metal Lockers' },
+  { division: '10 - Specialties', code: '105200', name: 'Plastic Laminate Lockers' },
+  { division: '10 - Specialties', code: '105300', name: 'Wood Lockers' },
+  { division: '10 - Specialties', code: '106000', name: 'Storage Specialties' },
+  { division: '10 - Specialties', code: '106100', name: 'Shelving and Storage Units' },
+  { division: '10 - Specialties', code: '106200', name: 'Storage Cabinets' },
+  { division: '10 - Specialties', code: '106300', name: 'Wire Mesh Partitions' }
+];
+
+module.exports = { division10 };

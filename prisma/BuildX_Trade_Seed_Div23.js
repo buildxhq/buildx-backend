@@ -1,0 +1,47 @@
+// BuildX Trade Seed: FULL Division 23 - Heating, Ventilating, and Air Conditioning (CSI Standard)
+// Covers air distribution, ductwork, HVAC piping, boilers, chillers, fans, terminal units, controls, and accessories
+
+const division23 = [
+  { division: '23 - HVAC', code: '230000', name: 'Heating, Ventilating, and Air Conditioning (HVAC)' },
+  { division: '23 - HVAC', code: '230100', name: 'Operation and Maintenance of HVAC' },
+  { division: '23 - HVAC', code: '230200', name: 'Maintenance of HVAC' },
+  { division: '23 - HVAC', code: '230500', name: 'Common Work Results for HVAC' },
+  { division: '23 - HVAC', code: '230510', name: 'Sleeves and Sleeve Seals for HVAC Piping' },
+  { division: '23 - HVAC', code: '230520', name: 'Hangers and Supports for HVAC Piping and Equipment' },
+  { division: '23 - HVAC', code: '230530', name: 'Identification for HVAC Piping and Equipment' },
+  { division: '23 - HVAC', code: '230540', name: 'Vibration and Seismic Controls for HVAC Piping and Equipment' },
+  { division: '23 - HVAC', code: '230600', name: 'Schedules for HVAC' },
+  { division: '23 - HVAC', code: '231000', name: 'HVAC Piping' },
+  { division: '23 - HVAC', code: '231100', name: 'Hydronic Piping' },
+  { division: '23 - HVAC', code: '231200', name: 'Refrigerant Piping' },
+  { division: '23 - HVAC', code: '231300', name: 'Instrument Air Piping' },
+  { division: '23 - HVAC', code: '232000', name: 'HVAC Pumps' },
+  { division: '23 - HVAC', code: '232100', name: 'Centrifugal HVAC Pumps' },
+  { division: '23 - HVAC', code: '232200', name: 'Vertical In-Line HVAC Pumps' },
+  { division: '23 - HVAC', code: '233000', name: 'Air Distribution' },
+  { division: '23 - HVAC', code: '233100', name: 'Ductwork' },
+  { division: '23 - HVAC', code: '233113', name: 'Sheet Metal Ductwork' },
+  { division: '23 - HVAC', code: '233300', name: 'Duct Accessories' },
+  { division: '23 - HVAC', code: '233400', name: 'Fans' },
+  { division: '23 - HVAC', code: '233600', name: 'Air Terminal Units' },
+  { division: '23 - HVAC', code: '233700', name: 'Air Outlets and Inlets' },
+  { division: '23 - HVAC', code: '234000', name: 'HVAC Air Cleaning Devices' },
+  { division: '23 - HVAC', code: '234100', name: 'Particulate Air Filtration' },
+  { division: '23 - HVAC', code: '234200', name: 'Gas-Phase Air Filtration' },
+  { division: '23 - HVAC', code: '235000', name: 'Central Heating Equipment' },
+  { division: '23 - HVAC', code: '235100', name: 'Boilers' },
+  { division: '23 - HVAC', code: '235200', name: 'Furnaces' },
+  { division: '23 - HVAC', code: '236000', name: 'Central Cooling Equipment' },
+  { division: '23 - HVAC', code: '236100', name: 'Chillers' },
+  { division: '23 - HVAC', code: '236200', name: 'Condensers' },
+  { division: '23 - HVAC', code: '237000', name: 'Indoor Air Quality Systems' },
+  { division: '23 - HVAC', code: '238000', name: 'Decentralized HVAC Equipment' },
+  { division: '23 - HVAC', code: '238100', name: 'Split-System Air Conditioners' },
+  { division: '23 - HVAC', code: '238200', name: 'Unit Ventilators' },
+  { division: '23 - HVAC', code: '238300', name: 'Terminal Heating Units' },
+  { division: '23 - HVAC', code: '239000', name: 'HVAC Instrumentation and Controls' },
+  { division: '23 - HVAC', code: '239100', name: 'Digital Controls for HVAC' },
+  { division: '23 - HVAC', code: '239200', name: 'Pneumatic Controls for HVAC' }
+];
+
+module.exports = { division23 };

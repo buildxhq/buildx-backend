@@ -1,0 +1,33 @@
+const division04 = [
+  { division: '04 - Masonry', code: '040000', name: 'Masonry' },
+  { division: '04 - Masonry', code: '040100', name: 'Maintenance of Masonry' },
+  { division: '04 - Masonry', code: '040110', name: 'Cleaning of Masonry' },
+  { division: '04 - Masonry', code: '040120', name: 'Repointing' },
+  { division: '04 - Masonry', code: '040130', name: 'Masonry Crack Repair' },
+  { division: '04 - Masonry', code: '040140', name: 'Masonry Anchoring and Ties' },
+  { division: '04 - Masonry', code: '040150', name: 'Masonry Injection Grouting' },
+  { division: '04 - Masonry', code: '040200', name: 'Unit Masonry Assemblies' },
+  { division: '04 - Masonry', code: '040210', name: 'Concrete Unit Masonry' },
+  { division: '04 - Masonry', code: '040220', name: 'Clay Unit Masonry' },
+  { division: '04 - Masonry', code: '040230', name: 'Glass Unit Masonry' },
+  { division: '04 - Masonry', code: '040240', name: 'Structural Clay Tile Masonry' },
+  { division: '04 - Masonry', code: '040300', name: 'Stone Assemblies' },
+  { division: '04 - Masonry', code: '040310', name: 'Granite Stonework' },
+  { division: '04 - Masonry', code: '040320', name: 'Limestone Stonework' },
+  { division: '04 - Masonry', code: '040330', name: 'Marble Stonework' },
+  { division: '04 - Masonry', code: '040340', name: 'Cast Stone Masonry' },
+  { division: '04 - Masonry', code: '040400', name: 'Architectural Masonry' },
+  { division: '04 - Masonry', code: '040410', name: 'Architectural Precast Masonry Units' },
+  { division: '04 - Masonry', code: '040420', name: 'Decorative Masonry Units' },
+  { division: '04 - Masonry', code: '040430', name: 'Split-Faced Concrete Masonry Units' },
+  { division: '04 - Masonry', code: '040500', name: 'Common Work Results for Masonry' },
+  { division: '04 - Masonry', code: '040510', name: 'Masonry Mortar' },
+  { division: '04 - Masonry', code: '040520', name: 'Masonry Grout' },
+  { division: '04 - Masonry', code: '040530', name: 'Masonry Reinforcement' },
+  { division: '04 - Masonry', code: '040540', name: 'Masonry Anchorage' },
+  { division: '04 - Masonry', code: '040550', name: 'Masonry Flashing and Drainage' },
+  { division: '04 - Masonry', code: '040560', name: 'Masonry Control Joints' },
+  { division: '04 - Masonry', code: '040600', name: 'Corrosion Protection for Masonry' }
+];
+
+module.exports = { division04 };
