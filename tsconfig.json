@@ -9,7 +9,7 @@
     "incremental": true,
     "module": "esnext",
     "esModuleInterop": true,
-    "tsBuildInfoFile": "./.tsbuildcache/tsconfig.tsbuildinfo"
+    "tsBuildInfoFile": "./.tsbuildcache/tsconfig.tsbuildinfo",
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "isolatedModules": true,
